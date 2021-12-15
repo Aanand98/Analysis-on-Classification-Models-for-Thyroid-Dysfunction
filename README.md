@@ -48,7 +48,7 @@ Link: https://www.kaggle.com/rithikkotha/thyroid-dataset/metadata
   identify the correlation between the features and their contribution towards the classification.
   The total training data samples will be 80% of the total data, and the remaining 20% will be
   used for testing.
-# Method:
+# Methodology:
   The following machine learning algorithms will be compared on the thyroid dataset and the
   model with the best result will be chosen for the classification.
   
