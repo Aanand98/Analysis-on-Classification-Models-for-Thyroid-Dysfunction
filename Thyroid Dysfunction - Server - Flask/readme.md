@@ -18,21 +18,21 @@ CONTENTS OF THIS FILE
 
 * Requirements:
     The following Packages are required for proper functioning:
-        * click==8.0.3
-        * colorama==0.4.4
-        * feedparser==6.0.8
-        * Flask==2.0.2
-        * itsdangerous==2.0.1
-        * Jinja2==3.0.3
-        * joblib==1.1.0
-        * MarkupSafe==2.0.1
-        * numpy==1.21.4
-        * scikit-learn==1.0.1
-        * scipy==1.7.3
-        * sgmllib3k==1.0.0
-        * sklearn==0.0
-        * threadpoolctl==3.0.0
-        * Werkzeug==2.0.2
+            * click==8.0.3
+            * colorama==0.4.4
+            * feedparser==6.0.8
+            * Flask==2.0.2
+            * itsdangerous==2.0.1
+            * Jinja2==3.0.3
+            * joblib==1.1.0
+            * MarkupSafe==2.0.1
+            * numpy==1.21.4
+            * scikit-learn==1.0.1
+            * scipy==1.7.3
+            * sgmllib3k==1.0.0
+            * sklearn==0.0
+            * threadpoolctl==3.0.0
+            * Werkzeug==2.0.2
 * Recommended:
     All the modules are necessary for proper functioning of the website and server.
 
