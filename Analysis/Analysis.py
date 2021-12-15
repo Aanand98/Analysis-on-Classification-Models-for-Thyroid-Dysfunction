@@ -68,7 +68,7 @@ def eval_metrics(y_test, y_pred):
   return accuracy*100, cm, precision, recall, f1, A, roc, gini
 
 
-data = pd.read_csv("/content/Thyroid Dataset.csv")
+data = pd.read_csv("Thyroid Dataset.csv")
 
 drop_list = ["TSH measured", "T3 measured", "TT4 measured",
              "T4U measured", "FTI measured", "TBG measured", "TBG", "referral source"]
