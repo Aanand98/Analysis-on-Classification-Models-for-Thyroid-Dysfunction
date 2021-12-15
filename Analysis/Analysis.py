@@ -5,11 +5,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import joblib
 
 from keras.models import Sequential
 from keras.layers import Dense
-
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, f1_score, roc_curve, auc, recall_score, roc_auc_score
+
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -18,11 +19,10 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 
 acc = []
-precision = []
-f1_score = []
-auc = []
-recall = []
-models = []
+precisions = []
+f1_scores = []
+aucs = []
+recalls = []
 models = ['Logistic regression', 'KNN',
           'Decision Tree', 'Random Forest', 'SVM']
 
@@ -46,31 +46,29 @@ def clean(dataset, list_cols):
 
 
 def eval_metrics(y_test, y_pred):
+  accuracy = accuracy_score(y_test, y_pred)
+  cm = confusion_matrix(y_test, y_pred)
+  precision = precision_score(y_test, y_pred)
+  recall = recall_score(y_test, y_pred)
+  f1 = f1_score(y_test, y_pred)
+  fpr, tpr, thresholds = roc_curve(y_test, y_pred, pos_label=1)
+  A = auc(fpr, tpr)
+  roc = roc_auc_score(y_test, y_pred)
+  #G = (2*roc) - 1
+  assert (len(y_test) == len(y_pred))
+  all = np.asarray(np.c_[y_test, y_pred, np.arange(len(y_test))], dtype=np.float)
+  all = all[np.lexsort((all[:, 2], -1 * all[:, 1]))]
+  totalLosses = all[:, 0].sum()
+  giniSum = all[:, 0].cumsum().sum() / totalLosses
 
-    accuracy = accuracy_score(y_test, y_pred)
-    cm = confusion_matrix(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
-    fpr, tpr, thresholds = roc_curve(y_test, y_pred, pos_label=1)
-    A = auc(fpr, tpr)
-    roc = roc_auc_score(y_test, y_pred)
-    #G = (2*roc) - 1
-    assert (len(y_test) == len(y_pred))
-    all = np.asarray(
-        np.c_[y_test, y_pred, np.arange(len(y_test))], dtype=np.float)
-    all = all[np.lexsort((all[:, 2], -1 * all[:, 1]))]
-    totalLosses = all[:, 0].sum()
-    giniSum = all[:, 0].cumsum().sum() / totalLosses
+  giniSum -= (len(y_test) + 1) / 2.
+  gini = giniSum / len(y_test)
+  #return giniSum / len(actual)
 
-    giniSum -= (len(y_test) + 1) / 2.
-    gini = giniSum / len(y_test)
-    # return giniSum / len(actual)
-
-    return accuracy*100, cm, precision, recall, f1, A, roc, gini
+  return accuracy*100, cm, precision, recall, f1, A, roc, gini
 
 
-data = pd.read_csv("/Thyroid Dataset.csv")
+data = pd.read_csv("/content/Thyroid Dataset.csv")
 
 drop_list = ["TSH measured", "T3 measured", "TT4 measured",
              "T4U measured", "FTI measured", "TBG measured", "TBG", "referral source"]
@@ -123,8 +121,8 @@ x_train, x_test, y_train, y_test = train_test_split(
 lr = LogisticRegression()
 lr.fit(x_train, y_train)
 pred = lr.predict(x_test)
-acc_lr, cm_lr, precision_lr, rec_lr, f1_lr, areaUnderCurve_lr, roc_lr, gini_lr = eval_metrics(
-    y_test, pred)
+acc_lr, cm_lr, precision_lr, rec_lr, f1_lr, areaUnderCurve_lr, roc_lr, gini_lr= eval_metrics(y_test, pred)
+
 
 print(
     f"The metrics for Logistic regression are: \n Accuracy: {acc_lr}% \nConfusion Matrix: {cm_lr} \nPrecision: {precision_lr} \nRecall: {rec_lr} \nF1 score: {f1_lr} \nArea Under Curve: {areaUnderCurve_lr}, \n ROC: {roc_lr} \n Gini: {gini_lr}")
@@ -196,11 +194,11 @@ print(
 # Creating Plots for Evalutaion Metrics for each model
 
 acc = [acc_lr, acc_knn, acc_dt, acc_rf, acc_svm]
-precision = [precision_lr, precision_knn,
+precisions = [precision_lr, precision_knn,
              precision_dt, precision_rf, precision_svm]
-recall = [rec_lr, rec_knn, rec_dt, rec_rf, rec_svm]
-f1_score = [f1_lr, f1_knn, f1_dt, f1_rf, f1_svm]
-auc = [areaUnderCurve_lr, areaUnderCurve_knn,
+recalls = [rec_lr, rec_knn, rec_dt, rec_rf, rec_svm]
+f1_scores = [f1_lr, f1_knn, f1_dt, f1_rf, f1_svm]
+aucs = [areaUnderCurve_lr, areaUnderCurve_knn,
        areaUnderCurve_dt, areaUnderCurve_rf, areaUnderCurve_svm]
 x_pos = np.arange(len(models))
 
@@ -208,18 +206,18 @@ fig, axs = plt.subplots(2, 3)
 fig.set_size_inches(25, 15)
 axs[0, 0].bar(models, acc)
 axs[0, 0].set_title('Accuracy')
-axs[0, 1].bar(models, precision, color='orange')
+axs[0, 1].bar(models, precisions, color='orange')
 axs[0, 1].set_title('Precision')
-axs[0, 2].bar(models, f1_score, color='green')
+axs[0, 2].bar(models, f1_scores, color='green')
 axs[0, 2].set_title('F1 Score')
-axs[1, 0].bar(models, recall, color='red')
+axs[1, 0].bar(models, recalls, color='red')
 axs[1, 0].set_title('Recall')
-axs[1, 1].bar(models, auc, color='blue')
+axs[1, 1].bar(models, aucs, color='blue')
 axs[1, 1].set_title('Area Under Curve')
 
 # Hide x labels and tick labels for top plots and y ticks for right plots.
 for ax in axs.flat:
-    ax.xticks(x_pos, models)
+    ax.set_xticks(x_pos, models)
     ax.label_outer()
 
 # Saves our decision Tree for future reference in our Website
