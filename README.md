@@ -1,9 +1,9 @@
 # Analysis-on-Classification-Models-for-Thyroid-Dysfunction
 
 Team Members:
-  1. Mrudula Krishna Prasad
-  2. Meghana Ramesh
-  3. Aanand Dhandapani
+  1. Mrudula Krishna Prasad https://github.com/Mrudula916
+  2. Meghana Ramesh https://github.com/MeghanaYRamesh
+  3. Aanand Dhandapani(me)
 
 # Introduction:
   Thyroid is a gland present near the windpipe (trachea). It releases hormones such as T3 and
