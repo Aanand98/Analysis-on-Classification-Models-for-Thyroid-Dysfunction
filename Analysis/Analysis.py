@@ -8,8 +8,8 @@ import time
 
 from keras.models import Sequential
 from keras.layers import Dense
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, f1_score, roc_curve, auc, recall_score, roc_auc_score
 
+from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, f1_score, roc_curve, auc, recall_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -70,7 +70,7 @@ def eval_metrics(y_test, y_pred):
     return accuracy*100, cm, precision, recall, f1, A, roc, gini
 
 
-data = pd.read_csv("/content/Thyroid Dataset.csv")
+data = pd.read_csv("/Thyroid Dataset.csv")
 
 drop_list = ["TSH measured", "T3 measured", "TT4 measured",
              "T4U measured", "FTI measured", "TBG measured", "TBG", "referral source"]
