@@ -5,7 +5,7 @@ import numpy as np
 model = Blueprint('model', __name__)
 
 def predict(dict):
-    decisionTree = joblib.load("Analysis\\Thyroid Dataset.csvv")
+    decisionTree = joblib.load("Analysis\\Thyroid.sav")
     inputs = np.array([
         dict["onthyroxine"],
         dict["antithyroidmed"],
